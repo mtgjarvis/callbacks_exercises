@@ -130,7 +130,7 @@ console.log( 'The total number of transactions is:', totalTransactions );
   HINT(S):
   - Not all transactions are 'sales'.
 */
-const numSales;
+const numSales = transactions.filter(transaction => transaction.type == 'sale').length;
 
 /*
   Hey, welcome to the first question!
@@ -151,6 +151,7 @@ const numSales;
   The breakdown above takes up a lot of space, feel free to move it to the top or bottom of the file!
 */
 
+
 console.log( 'The total number of sales is:', numSales );
 
 
@@ -160,7 +161,7 @@ console.log( 'The total number of sales is:', numSales );
 /*
   Calculate the total number of 'purchases'.
 */
-const numPurchases;
+const numPurchases = transactions.filter(transaction => transaction.type == 'purchases').length;
 
 console.log( 'The total number of purchases is:', numPurchases );
 
@@ -174,7 +175,7 @@ console.log( 'The total number of purchases is:', numPurchases );
   HINT(S):
   - Don't forget that 'purchases' can also be made in 'cash'!
 */
-const numCashSales;
+const numCashSales = transactions.filter(transaction => transaction.paymentMethod == 'cash').length;
 
 console.log( 'The total number of cash sales is:', numCashSales );
 
@@ -188,7 +189,7 @@ console.log( 'The total number of cash sales is:', numCashSales );
   HINT(S):
   - Make sure to exclude any 'sales' made by 'credit'!
 */
-const numCreditPurchases;
+const numCreditPurchases = transactions.filter(transaction => transaction.paymentMethod == 'credit').length;
 
 console.log( 'The total number of credit purchases is:', numCreditPurchases );
 
@@ -205,7 +206,11 @@ console.log( 'The total number of credit purchases is:', numCreditPurchases );
   - The assembled array should be made up of strings, not full `transaction` objects.
   - This array is allowed to contain duplicate values.
 */
-const allVendors;
+
+const allVendors = []
+const vendor = transactions.forEach(transaction => {
+  transaction.vendor != null ? allVendors.push(transaction.vendor): 'none';
+})
 
 console.log( 'The vendors are:', allVendors );
 
@@ -222,7 +227,12 @@ console.log( 'The vendors are:', allVendors );
   - The assembled array should be made up of strings, not full `transaction` objects.
   - Make sure that the resulting array *does not* include any duplicates.
 */
-const uniqueCustomers;
+const uniqueCustomers = []
+  transactions.filter(sales => sales.hasOwnProperty('customer')).forEach(element => {
+    if(!uniqueCustomers.includes(element.cutomer)){
+      uniqueCustomers.push(element.customer);
+    }
+  });
 
 console.log( 'The unique customers are:', uniqueCustomers );
 
@@ -240,7 +250,15 @@ console.log( 'The unique customers are:', uniqueCustomers );
   - There may be more than 1 'sale' that includes 5 or more items.
   - Individual transactions do not have either `name` or `numItems` properties, we'll have to add them to the output.
 */
-const bigSpenders;
+
+const bigSpenders=[];
+let bigTransactions = transactions.filter(sales => sales.items.length >= 5)
+  bigTransactions.forEach(transaction => {
+    bigSpenders.push({
+      name: transaction.customer,
+      numItems: transaction.items.length
+    })
+  });
 
 console.log( 'The "big spenders" are:', bigSpenders );
 
@@ -254,7 +272,7 @@ console.log( 'The "big spenders" are:', bigSpenders );
   HINT(S):
   - Transactions don't have 'prices', but their 'items' do!
 */
-const sumFirstSale;
+const sumFirstSale= transactions[0].items.reduce((a, b) => a + (b['price'] || 0), 0);
 
 console.log( 'The sum of the first sale items is:', sumFirstSale );
 
@@ -270,7 +288,12 @@ console.log( 'The sum of the first sale items is:', sumFirstSale );
   - Make sure to include 'price' information from *all* purchases.
 */
 
-const sumPurchases;
+let sumPurchases = 0;
+let check = transactions.forEach(transaction => {
+  if (transaction.type === 'purchase') {
+    sumPurchases += transaction.items.reduce((a, b) => a + (b['price'] || 0), 0);
+  }
+});
 
 console.log( 'The sum of all purchases is:', sumPurchases );
 
@@ -288,7 +311,10 @@ console.log( 'The sum of all purchases is:', sumPurchases );
   HINT(S):
   - Unlike 'QUESTION 08' and 'QUESTION 09', here we're interested in both 'sale' and 'purchase' transactions.
 */
-const netProfit;
+let netProfit=0;
+let sumTransactions = transactions.forEach(transaction => {
+  netProfit += transaction.items.reduce((a, b) => (b['price'] || 0), 0) 
+});
 
 console.log( 'The net profit is:', netProfit );
 
@@ -302,7 +328,7 @@ console.log( 'The net profit is:', netProfit );
   HINTS:
   - The result of this calculation should be a number (not an array, object, or other data type).
 */
-const mostItems;
+const mostItems = (Math.max.apply(null, transactions.map(transaction => (transaction.items.length))));
 
 console.log( 'The most items sold in a single transaction is:', mostItems );
 
@@ -313,6 +339,8 @@ console.log( 'The most items sold in a single transaction is:', mostItems );
 /*
   Calculate the sum of the 'purchase' with the fewest items.
 */
-const sumOfSmallestPurchase;
+let purchases = transactions.filter(sales => sales.type === 'purchase')
+purchaseLength = purchases.map(transaction => (transaction.items.length))
+const sumOfSmallestPurchase = purchases[purchaseLength.indexOf(Math.min.apply(null, purchaseLength))].items.reduce((a, b) => a + (b['price'] || 0), 0);
 
 console.log( 'The sum of the smallest purchase is:', sumOfSmallestPurchase );
